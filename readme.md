@@ -1,10 +1,12 @@
-本项目的目标：简化is的产品化版本Docker镜像的发布工作：
+### 本项目的目标：
+
+简化is的产品化版本Docker镜像的发布工作：
 
 - 修改配置
 - 生成证书
 - 个性化定制
 
-一、目录说明
+### 一、目录说明
 
 ```
 │  build-init-default.sh    使用缺省的H2数据库生成镜像的脚本
@@ -23,7 +25,7 @@
         is_auto_config_oracle.sh 自动进行主数据库切换到oracle的工作
 ```
 
-二、如何使用
+### 二、如何使用
 
 1、在linux服务器上安装JDK、git、docker
 
@@ -95,4 +97,68 @@ DB_PASSWORD=数据库密码
 > ```
 > https://is.cd.mtn:9443/carbon
 > ```
+
+### 知识点附件：私有docker仓库  docker register的安装与使用（与本项目无关）
+
+```
+docker run -d -p 5000:5000 --name dockerregister --restart=always -v /opt/data/registry:/var/lib/registry registry
+touch /opt/config.yml
+docker run -d -p 5001:8080 --name registry-web  --restart=always --link dockerregister -v /opt/config.yml:/conf/config.yml:ro hyper/docker-registry-web
+```
+
+访问：
+
+```
+http://192.168.200.224:5001
+```
+
+其中 /opt/config.yml的文件内容如下：
+
+```yml
+registry:
+  # Docker registry url
+  url: http://registry-srv:5000/v2
+  # Docker registry fqdn
+  name: localhost:5000
+  # To allow image delete, should be false
+  readonly: false
+  auth:
+    # Disable authentication
+    enabled: false
+```
+
+使用：
+
+```
+  http://192.168.200.224:5000/v2/_catalog 查看镜像清单
+  http://192.168.200.224:5001 管理镜像
+```
+
+  命令行：
+
+```shell
+#为了验证，读者可以拉取一个busybox镜像（因为体积小），进行实验。
+docker pull busybox
+#拉取最新的busybox镜像后，再给其打标为v1.0，准备发布到Registry中。
+docker tag busybox localhost:5000/bosybox:v1.0 
+#发布busybox镜像的v1.0版本到本地docker仓库
+docker push localhost:5000/bosybox:v1.0    
+#从本地仓库获取bosybox:v1.0镜像
+docker pull localhost:5000/bosybox:v1.0         
+```
+
+​    实操：
+
+```shell
+docker tag gds/wso2is:o5.7.0 localhost:5000/gds/wso2is:o5.7.0
+docker push localhost:5000/gds/wso2is:o5.7.0
+
+docker tag gds/wso2is:5.7.0 localhost:5000/gds/wso2is:5.7.0
+docker push localhost:5000/gds/wso2is:5.7.0
+    
+docker tag gds/wso2is:o5.7.0 localhost:5000/gds/wso2is:latest
+docker push localhost:5000/gds/wso2is
+```
+
+
 
