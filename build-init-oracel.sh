@@ -72,17 +72,21 @@ docker build -t gds/$PROCUCT_NAME:o$PROCUCT_VERSION .
 cd $CUR_DIR
 #生成能够在单独部署的wso2is版本到$PWD/target/目录下
 echo "开始构建可单独部署的wso2is版本......"
-echo "-------------------------------------------------------------------------------------------"
+# "-------------------------------------------------------------------------------------------"
 if [ ! -d "$PWD/target" ]; then
   mkdir target
 else
   rm -f $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION-oracle.zip
 fi
 zip -r $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION-oracle.zip $IS_HOME    > /dev/null
+# "-------------------------------------------------------------------------------------------"
+#导出镜像文件以便迁移到其它docker环境中
+docker save -o $PWD/target/$PROCUCT_NAME-o$PROCUCT_VERSION.tar gds/$PROCUCT_NAME:o$PROCUCT_VERSION
 echo "========================================================================================================================="
 echo "提示  1："
 echo "IS的本地镜像版本已生成 TAG为：$PROCUCT_NAME:o$PROCUCT_VERSION"
-echo "你可以执行如下的docker命令来启动IS："
+echo "你可以复制$PWD/target/$PROCUCT_NAME-o$PROCUCT_VERSION.tar文件到光盘以便迁移到其它docker环境中"
+echo "你也可以直接在本机执行如下的docker命令来启动IS："
 echo "     docker run -it -p $IS_HOST_PORT:9443 gds/$PROCUCT_NAME:o$PROCUCT_VERSION"
 echo "     docker run -d -p $IS_HOST_PORT:9443 --name $IS_HOST_NAME --restart=always gds/$PROCUCT_NAME:o$PROCUCT_VERSION"
 echo "提示  2："
