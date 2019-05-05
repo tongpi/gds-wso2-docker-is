@@ -29,27 +29,35 @@ if [ ! -f "$PROCUCT_RELEASE_ZIP_FILE" ]; then
 #  wget  $PROCUCT_RELEASE_ZIP_FILE 
    echo "========================================================================================================================="
    echo "用法："
-   echo "请首先复制从IS源代码库( https://github.com/tongpi/docker-is.git)构建出来的$PROCUCT_NAME-$PROCUCT_VERSION.zip到$0脚本所在目录下"
+   echo "请首先复制从IS源代码库( https://github.com/tongpi/product-is.git)构建出来的$PROCUCT_NAME-$PROCUCT_VERSION.zip到$0脚本所在目录下"
    echo "========================================================================================================================="   
    exit 1
 fi 
 rm -Rf $IS_HOME
+# 自动安装zip包
+if type unzip >/dev/null 2>&1; then 
+  echo 'zip软件包已经安装' 
+else 
+  echo '正在安装zip软件包……' 
+  sudo apt-get install zip --assume-yes  > /dev/null
+fi
 unzip $PROCUCT_RELEASE_ZIP_FILE -d $PWD/docker-is/dockerfiles/ubuntu/is/files   > /dev/null
 echo '已解压缩PROCUCT_RELEASE_ZIP_FILE到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下'
 cp ./jdbc-drivers/*.jar $PWD/docker-is/dockerfiles/ubuntu/is/files/
 echo '已复制数据库jdbc驱动到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下'
 # 自动配置服务器相关证书以及文件编码转换等工作
+chmod +x ./scripts/*.sh
 ./scripts/is_auto_config.sh $IS_HOME $IS_HOST_NAME $IS_SERVER_DISPLAY_NAME
 
 echo "尝试删除旧的IS本地docker 镜像......"
 echo docker rmi $PROCUCT_NAME:$PROCUCT_VERSION
-docker rmi $PROCUCT_NAME:$PROCUCT_VERSION > /dev/null
+sudo docker rmi $PROCUCT_NAME:$PROCUCT_VERSION > /dev/null
 echo "开始构建新的IS的docker镜像......"
 echo "-------------------------------------------------------------------------------------------"
 CUR_DIR=$PWD
 cd $PWD/docker-is/dockerfiles/ubuntu/is
 echo "docker build -t gds/$PROCUCT_NAME:$PROCUCT_VERSION ."
-docker build -t gds/$PROCUCT_NAME:$PROCUCT_VERSION .
+sudo docker build -t gds/$PROCUCT_NAME:$PROCUCT_VERSION .
 cd $CUR_DIR
 #生成能够在单独部署的wso2is版本到$PWD/target/目录下
 echo "开始构建可单独部署的wso2is版本......"
@@ -62,7 +70,7 @@ fi
 zip -r $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.zip $IS_HOME    > /dev/null
 # "-------------------------------------------------------------------------------------------"
 #导出镜像文件以便迁移到其它docker环境中
-docker save -o $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.tar gds/$PROCUCT_NAME:$PROCUCT_VERSION
+sudo docker save -o $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.tar gds/$PROCUCT_NAME:$PROCUCT_VERSION
 echo "========================================================================================================================="
 echo "提示  1："
 echo "IS的本地镜像版本已生成 TAG为：$PROCUCT_NAME:$PROCUCT_VERSION"
