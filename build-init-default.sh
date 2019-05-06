@@ -11,6 +11,7 @@
 #    IS_HOST_PORT                          IS身份管理服务器的机器的主服务端口  用来生成提示信息
 #    IS_SERVER_DISPLAY_NAME                IS身份管理服务器的显示名称，在管理控制台的首页上显示。如：XXXXX学院统一身份管理服务器.  用来修改conf/carbon.xml
 #
+#    CARBON_UI_CUSTOM_IS_BRANCH            IS管理控制台个性化定制项目的分支名称，缺省是master
 #======================================================================================================
 export JAVA_HOME=/opt/java/jdk1.8.0_144
 PROCUCT_NAME=wso2is
@@ -18,7 +19,9 @@ PROCUCT_VERSION=5.7.0
 IS_HOST_NAME=is.cd.mtn
 IS_HOST_PORT=9443
 IS_SERVER_DISPLAY_NAME=统一身份服务器
+CARBON_UI_CUSTOM_IS_BRANCH=master
 #-------------------------------------------------------------------------------------------
+CUR_DIR=$PWD
 if [ ! -d "$PWD/docker-is" ]; then
   git clone https://github.com/tongpi/docker-is.git
 fi
@@ -41,10 +44,23 @@ else
   echo '正在安装zip软件包……' 
   sudo apt-get install zip --assume-yes  > /dev/null
 fi
+#-------------------------------------------------------------------------------------------
 unzip $PROCUCT_RELEASE_ZIP_FILE -d $PWD/docker-is/dockerfiles/ubuntu/is/files   > /dev/null
 echo '已解压缩PROCUCT_RELEASE_ZIP_FILE到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下'
 cp ./jdbc-drivers/*.jar $PWD/docker-is/dockerfiles/ubuntu/is/files/
 echo '已复制数据库jdbc驱动到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下'
+# "-------------------------------------------------------------------------------------------"
+echo "开始进行IS管理控制台个性化定制组件的安装工作"
+if [ ! -d "$PWD/carbon-ui-custom-is" ]; then
+  rm -Rf $PWD/carbon-ui-custom-is
+  git clone -b $CARBON_UI_CUSTOM_IS_BRANCH https://github.com/tongpi/carbon-ui-custom-is.git
+fi
+cd carbon-ui-custom-is
+mvn clean install
+cp modules/org.wso2.carbon.ui_fragment/target/org.wso2.carbon.ui_4.4.35_fragment-1.0.0.jar ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/components/dropins/
+cp modules/org.wso2.carbon.ui_patch/target/org.wso2.carbon.ui_4.4.35_patch-1.0.0.jar ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/components/dropins/
+cd $CUR_DIR
+# "-------------------------------------------------------------------------------------------"
 # 自动配置服务器相关证书以及文件编码转换等工作
 chmod +x ./scripts/*.sh
 ./scripts/is_auto_config.sh $IS_HOME $IS_HOST_NAME $IS_SERVER_DISPLAY_NAME
@@ -54,7 +70,6 @@ echo docker rmi $PROCUCT_NAME:$PROCUCT_VERSION
 sudo docker rmi $PROCUCT_NAME:$PROCUCT_VERSION > /dev/null
 echo "开始构建新的IS的docker镜像......"
 echo "-------------------------------------------------------------------------------------------"
-CUR_DIR=$PWD
 cd $PWD/docker-is/dockerfiles/ubuntu/is
 echo "docker build -t gds/$PROCUCT_NAME:$PROCUCT_VERSION ."
 sudo docker build -t gds/$PROCUCT_NAME:$PROCUCT_VERSION .

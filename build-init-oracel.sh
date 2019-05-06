@@ -17,6 +17,8 @@
 #    DB_SID                                IS身份管理服务器的主数据库Oracle的SID，如：kyy
 #    DB_USERNAME                           IS身份管理服务器的主数据库Oracle的用户名
 #    DB_PASSWORD                           IS身份管理服务器的主数据库Oracle的密码
+#
+#    CARBON_UI_CUSTOM_IS_BRANCH            IS管理控制台个性化定制项目的分支名称，缺省是master
 #======================================================================================================
 export JAVA_HOME=/opt/java/jdk1.8.0_144
 PROCUCT_NAME=wso2is
@@ -29,7 +31,9 @@ DB_PORT=1521
 DB_SID=kyy
 DB_USERNAME=wch_is
 DB_PASSWORD=a1b2c3
+CARBON_UI_CUSTOM_IS_BRANCH=master
 #-------------------------------------------------------------------------------------------
+CUR_DIR=$PWD
 if [ ! -d "$PWD/docker-is" ]; then
   git clone https://github.com/tongpi/docker-is.git
 fi
@@ -63,6 +67,18 @@ echo '已复制数据库jdbc驱动到$PWD/docker-is/dockerfiles/ubuntu/is/files�
 
 # 给IS部署cas构件  添加org.wso2.carbon.identity.sso.cas-2.0.X.jar文件到$IS_HOME//repository/components/dropins目录下即可
 cp ./connectors/org.wso2.carbon.extension.identity.sso.cas-2.0.2.jar $IS_HOME//repository/components/dropins/
+# "-------------------------------------------------------------------------------------------"
+echo "开始进行IS管理控制台个性化定制组件的安装工作"
+if [ ! -d "$PWD/carbon-ui-custom-is" ]; then
+  rm -Rf $PWD/carbon-ui-custom-is
+  git clone -b $CARBON_UI_CUSTOM_IS_BRANCH https://github.com/tongpi/carbon-ui-custom-is.git
+fi
+cd carbon-ui-custom-is
+mvn clean install    > /dev/null
+cp modules/org.wso2.carbon.ui_fragment/target/org.wso2.carbon.ui_4.4.35_fragment-1.0.0.jar ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/components/dropins/
+cp modules/org.wso2.carbon.ui_patch/target/org.wso2.carbon.ui_4.4.35_patch-1.0.0.jar ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/components/dropins/
+cd $CUR_DIR
+# "-------------------------------------------------------------------------------------------"
 # 自动配置服务器相关证书以及文件编码转换等工作
 chmod +x ./scripts/*.sh
 ./scripts/is_auto_config.sh $IS_HOME $IS_HOST_NAME $IS_SERVER_DISPLAY_NAME
@@ -74,7 +90,6 @@ echo docker rmi $PROCUCT_NAME:o$PROCUCT_VERSION
 sudo docker rmi $PROCUCT_NAME:o$PROCUCT_VERSION > /dev/null
 echo "开始构建新的IS的docker镜像......"
 echo "-------------------------------------------------------------------------------------------"
-CUR_DIR=$PWD
 cd $PWD/docker-is/dockerfiles/ubuntu/is
 echo "docker build -t gds/$PROCUCT_NAME:o$PROCUCT_VERSION ."
 sudo docker build -t gds/$PROCUCT_NAME:o$PROCUCT_VERSION .
