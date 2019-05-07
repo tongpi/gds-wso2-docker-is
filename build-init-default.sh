@@ -20,6 +20,7 @@ IS_HOST_NAME=is.cd.mtn
 IS_HOST_PORT=9443
 IS_SERVER_DISPLAY_NAME=统一身份服务器
 CARBON_UI_CUSTOM_IS_BRANCH=master
+PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND=wget -N --http-user=admin --http-password='a1b2c3d4' --auth-no-challenge http://192.168.3.69:9080/job/product-is/lastSuccessfulBuild/artifact/modules/distribution/target/wso2is-5.7.0.zip
 #-------------------------------------------------------------------------------------------
 CUR_DIR=$PWD
 if [ ! -d "$PWD/docker-is" ]; then
@@ -28,6 +29,8 @@ fi
 IS_HOME=$PWD/docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION
 echo "IS_HOME=$IS_HOME"
 PROCUCT_RELEASE_ZIP_FILE=$PROCUCT_NAME-$PROCUCT_VERSION.zip
+echo "开始从产品仓库下载$PROCUCT_RELEASE_ZIP_FILE到本地磁盘……"
+$PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND
 if [ ! -f "$PROCUCT_RELEASE_ZIP_FILE" ]; then 
 #  wget  $PROCUCT_RELEASE_ZIP_FILE 
    echo "========================================================================================================================="
@@ -56,7 +59,7 @@ if [ ! -d "$PWD/carbon-ui-custom-is" ]; then
   git clone -b $CARBON_UI_CUSTOM_IS_BRANCH https://github.com/tongpi/carbon-ui-custom-is.git
 fi
 cd carbon-ui-custom-is
-mvn clean install
+mvn clean install    > /dev/null
 cp modules/org.wso2.carbon.ui_fragment/target/org.wso2.carbon.ui_4.4.35_fragment-1.0.0.jar ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/components/dropins/
 cp modules/org.wso2.carbon.ui_patch/target/org.wso2.carbon.ui_4.4.35_patch-1.0.0.jar ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/components/dropins/
 cd $CUR_DIR
