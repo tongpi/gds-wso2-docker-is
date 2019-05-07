@@ -32,7 +32,7 @@ DB_SID=kyy
 DB_USERNAME=wch_is
 DB_PASSWORD=a1b2c3
 CARBON_UI_CUSTOM_IS_BRANCH=master
-PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND="wget -N --http-user=admin --http-password='a1b2c3d4' --auth-no-challenge http://192.168.3.69:9080/job/product-is/lastSuccessfulBuild/artifact/modules/distribution/target/wso2is-5.7.0.zip"
+PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND="wget -N --http-user=admin --http-password=a1b2c3d4 --auth-no-challenge http://192.168.3.69:9080/job/product-is/lastSuccessfulBuild/artifact/modules/distribution/target/wso2is-5.7.0.zip"
 #-------------------------------------------------------------------------------------------
 CUR_DIR=$PWD
 if [ ! -d "$PWD/docker-is" ]; then
