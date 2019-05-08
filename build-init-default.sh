@@ -58,9 +58,9 @@ else
 fi
 #-------------------------------------------------------------------------------------------
 unzip $PROCUCT_RELEASE_ZIP_FILE -d $PWD/docker-is/dockerfiles/ubuntu/is/files   > /dev/null
-echo '已解压缩PROCUCT_RELEASE_ZIP_FILE到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下'
+echo "已解压缩PROCUCT_RELEASE_ZIP_FILE到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下"
 cp ./jdbc-drivers/*.jar $PWD/docker-is/dockerfiles/ubuntu/is/files/
-echo '已复制数据库jdbc驱动到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下'
+echo "已复制数据库jdbc驱动到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下"
 # "-------------------------------------------------------------------------------------------"
 echo "开始进行IS管理控制台个性化定制组件的安装工作"
 if [ ! -d "$PWD/carbon-ui-custom-is" ]; then
@@ -122,7 +122,7 @@ echo
 echo "                 ###############################################################"
 echo "========================================================================================================================="
 echo "提示  1："
-echo "IS的本地镜像版本已生成 TAG为：$PROCUCT_NAME:$PROCUCT_VERSION"
+echo "IS的本地镜像版本已生成 TAG为：$CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION"
 echo "你可以复制$PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.tar文件到光盘以便迁移到其它docker环境中"
 echo "你也可以直接在本机执行如下的docker命令来启动IS："
 echo "     docker run -it -p $IS_HOST_PORT:9443 $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION"

@@ -63,19 +63,19 @@ fi
 rm -Rf $IS_HOME
 # 自动安装zip包
 if type unzip >/dev/null 2>&1; then 
-  echo 'zip软件包已经安装' 
+  echo "zip软件包已经安装"
 else 
-  echo '正在安装zip软件包……' 
+  echo "正在安装zip软件包……" 
   sudo apt-get install zip --assume-yes  > /dev/null
 fi
 #-------------------------------------------------------------------------------------------
 unzip $PROCUCT_RELEASE_ZIP_FILE -d $PWD/docker-is/dockerfiles/ubuntu/is/files   > /dev/null
-echo '已解压缩PROCUCT_RELEASE_ZIP_FILE到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下'
+echo "已解压缩PROCUCT_RELEASE_ZIP_FILE到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下"
 # 这一步是给docker build准备的
 cp ./jdbc-drivers/*.jar $PWD/docker-is/dockerfiles/ubuntu/is/files/
 # 这一步仅仅为了单独部署而准备，对build docker image来说不是必需的
 cp ./jdbc-drivers/*.jar $IS_HOME/repository/components/lib/
-echo '已复制数据库jdbc驱动到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下'
+echo "已复制数据库jdbc驱动到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下"
 
 # 给IS部署cas构件  添加org.wso2.carbon.identity.sso.cas-2.0.X.jar文件到$IS_HOME//repository/components/dropins目录下即可
 cp ./connectors/org.wso2.carbon.extension.identity.sso.cas-2.0.2.jar $IS_HOME//repository/components/dropins/
@@ -142,7 +142,7 @@ echo
 echo "                 ###############################################################"
 echo "========================================================================================================================="
 echo "提示  1："
-echo "IS的本地镜像版本已生成 TAG为：$PROCUCT_NAME:o$PROCUCT_VERSION"
+echo "IS的本地镜像版本已生成 TAG为：$CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:o$PROCUCT_VERSION"
 echo "你可以复制$PWD/target/$PROCUCT_NAME-o$PROCUCT_VERSION.tar文件到光盘以便迁移到其它docker环境中"
 echo "你也可以直接在本机执行如下的docker命令来启动IS："
 echo "     docker run -it -p $IS_HOST_PORT:9443 $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:o$PROCUCT_VERSION"
