@@ -43,7 +43,7 @@ echo "IS_HOME=$IS_HOME"
 PROCUCT_RELEASE_ZIP_FILE=$PROCUCT_NAME-$PROCUCT_VERSION.zip
 rm $PROCUCT_RELEASE_ZIP_FILE
 echo "开始从产品仓库下载$PROCUCT_RELEASE_ZIP_FILE到本地磁盘……"
-$PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND
+$PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND   > /dev/null
 if [ ! -f "$PROCUCT_RELEASE_ZIP_FILE" ]; then 
 #  wget  $PROCUCT_RELEASE_ZIP_FILE 
    echo "========================================================================================================================="
@@ -89,9 +89,20 @@ chmod +x ./scripts/*.sh
 # 自动配置服务器主数据库配置为oracle等工作
 ./scripts/is_auto_config_oracle.sh  $IS_HOME $DB_HOST $DB_PORT $DB_SID $DB_USERNAME $DB_PASSWORD
 
-echo "尝试删除旧的IS本地docker 镜像......"
-echo docker rmi $PROCUCT_NAME:o$PROCUCT_VERSION
-sudo docker rmi $PROCUCT_NAME:o$PROCUCT_VERSION > /dev/null
+# echo "尝试删除旧的IS本地docker 镜像......"
+# echo docker rmi gds/$PROCUCT_NAME:o$PROCUCT_VERSION
+# sudo docker rmi gds/$PROCUCT_NAME:o$PROCUCT_VERSION > /dev/null
+# "-------------------------------------------------------------------------------------------"
+echo "检查容器是否存在，若存在，就先删除"
+DOCKER_CONTAINER_NAME=$IS_HOST_NAME
+if [ ! "$(docker ps -q -f name=$DOCKER_CONTAINER_NAME)" ]; then
+    if [ "$(docker ps -aq -f status=exited -f name=$DOCKER_CONTAINER_NAME)" ]; then
+        sudo docker rm $DOCKER_CONTAINER_NAME
+    fi
+else
+    sudo docker stop $DOCKER_CONTAINER_NAME
+    sudo docker rm $DOCKER_CONTAINER_NAME
+fi
 echo "开始构建新的IS的docker镜像......"
 echo "-------------------------------------------------------------------------------------------"
 cd $PWD/docker-is/dockerfiles/ubuntu/is
@@ -110,17 +121,7 @@ zip -r $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION-oracle.zip $IS_HOME    > /dev/
 # "-------------------------------------------------------------------------------------------"
 #导出镜像文件以便迁移到其它docker环境中
 sudo docker save -o $PWD/target/$PROCUCT_NAME-o$PROCUCT_VERSION.tar gds/$PROCUCT_NAME:o$PROCUCT_VERSION
-# "-------------------------------------------------------------------------------------------"
-echo "检查容器是否存在，若存在，就先删除然后重新创建一个"
-DOCKER_CONTAINER_NAME=$IS_HOST_NAME
-if [ ! "$(docker ps -q -f name=$DOCKER_CONTAINER_NAME)" ]; then
-    if [ "$(docker ps -aq -f status=exited -f name=$DOCKER_CONTAINER_NAME)" ]; then
-        sudo docker rm $DOCKER_CONTAINER_NAME
-    fi
-else
-    sudo docker stop $DOCKER_CONTAINER_NAME
-    sudo docker rm $DOCKER_CONTAINER_NAME
-fi
+echo "重新创建容器$DOCKER_CONTAINER_NAME"
 sudo docker run -d --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  gds/$PROCUCT_NAME:$PROCUCT_VERSION
 echo "                 ################################################################"
 echo
