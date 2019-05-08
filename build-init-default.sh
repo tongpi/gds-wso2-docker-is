@@ -94,19 +94,21 @@ echo "检查容器是否存在，若存在，就先删除然后重新创建一�
 DOCKER_CONTAINER_NAME=$IS_HOST_NAME
 if [ ! "$(docker ps -q -f name=$DOCKER_CONTAINER_NAME)" ]; then
     if [ "$(docker ps -aq -f status=exited -f name=$DOCKER_CONTAINER_NAME)" ]; then
-        docker stop $DOCKER_CONTAINER_NAME
-        docker rm $DOCKER_CONTAINER_NAME
+        sudo docker rm $DOCKER_CONTAINER_NAME
     fi
-    docker run -d --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  gds/$PROCUCT_NAME:$PROCUCT_VERSION
-    echo "                 ################################################################"
-    echo
-    echo "                 访问IS的管理控制台：https://$IS_HOST_NAME:$IS_HOST_PORT/carbon"
-    echo "                 注意：你可能需要给你的hosts中添加添加如下的主机域名解析："
-#    temptemp="$(ifconfig -a | grep inet | grep -v 127.0.0.1 | grep -v inet6 | awk '{print $2}' | tr -d "addrs:" | tail -n 1)" 
-    echo "                       192.168.3.69	$IS_HOST_NAME"
-    echo
-    echo "                 ###############################################################"
+else
+    sudo docker stop $DOCKER_CONTAINER_NAME
+    sudo docker rm $DOCKER_CONTAINER_NAME
 fi
+sudo docker run -d --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  gds/$PROCUCT_NAME:$PROCUCT_VERSION
+echo "                 ################################################################"
+echo
+echo "                 访问IS的管理控制台：https://$IS_HOST_NAME:$IS_HOST_PORT/carbon"
+echo "                 注意：你可能需要给你的hosts中添加添加如下的主机域名解析："
+#    temptemp="$(ifconfig -a | grep inet | grep -v 127.0.0.1 | grep -v inet6 | awk '{print $2}' | tr -d "addrs:" | tail -n 1)" 
+echo "                       192.168.3.69	$IS_HOST_NAME"
+echo
+echo "                 ###############################################################"
 echo "========================================================================================================================="
 echo "提示  1："
 echo "IS的本地镜像版本已生成 TAG为：$PROCUCT_NAME:$PROCUCT_VERSION"
