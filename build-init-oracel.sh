@@ -74,6 +74,8 @@ cp ./connectors/org.wso2.carbon.extension.identity.sso.cas-2.0.2.jar $IS_HOME//r
 # "-------------------------------------------------------------------------------------------"
 echo "开始进行IS管理控制台个性化定制组件的安装工作"
 if [ ! -d "$PWD/carbon-ui-custom-is" ]; then
+  git clone -b $CARBON_UI_CUSTOM_IS_BRANCH https://github.com/tongpi/carbon-ui-custom-is.git
+else
   rm -Rf $PWD/carbon-ui-custom-is
   git clone -b $CARBON_UI_CUSTOM_IS_BRANCH https://github.com/tongpi/carbon-ui-custom-is.git
 fi
