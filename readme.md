@@ -6,6 +6,22 @@
 - 生成证书
 - 个性化定制
 
+### 客户化产品的发布过程流程:
+
+以后各个客户化产品的发布过程流程大致如下：
+
+> 1、在个性化定制项目https://github.com/tongpi/carbon-ui-custom-is.git上创建新的分支：<项目代号>作为分支名称，然后继续个性化修改，push到github
+>
+> 2、工具项目需要规划好域名、数据库连接等参数
+>
+>  3、在docker镜像个性化定制项目https://github.com/tongpi/gds-wso2-docker-is.git上创建同样的分支，然后根据上一步规划修改build-init-default.sh和build-init-default.sh中的配置参数
+>
+>  4、在Jenkins上创建一个gds-wso2-docker-is-【分支名】-oracle的任务，构建该任务
+>
+>  5、测试
+>
+>  6、下载第三步任务的构建成品*.tar刻盘交项目部进行现场部署
+
 ### 一、目录说明
 
 ```
