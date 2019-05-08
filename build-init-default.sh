@@ -102,8 +102,8 @@ if [ ! "$(docker ps -q -f name=$DOCKER_CONTAINER_NAME)" ]; then
     echo
     echo "                 访问IS的管理控制台：https://$IS_HOST_NAME:$IS_HOST_PORT/carbon"
     echo "                 注意：你可能需要给你的hosts中添加添加如下的主机域名解析："
-    temptemp="$(ifconfig -a | grep inet | grep -v 127.0.0.1 | grep -v inet6 | awk '{print $2}' | tr -d "addrs:" | tail -n 1)" 
-    echo "                       $temptemp	$IS_HOST_NAME"
+#    temptemp="$(ifconfig -a | grep inet | grep -v 127.0.0.1 | grep -v inet6 | awk '{print $2}' | tr -d "addrs:" | tail -n 1)" 
+    echo "                       192.168.3.69	$IS_HOST_NAME"
     echo
     echo "                 ###############################################################"
 fi
