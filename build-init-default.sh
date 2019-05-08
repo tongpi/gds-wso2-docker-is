@@ -72,8 +72,8 @@ chmod +x ./scripts/*.sh
 ./scripts/is_auto_config.sh $IS_HOME $IS_HOST_NAME $IS_SERVER_DISPLAY_NAME
 
 # echo "尝试删除旧的IS本地docker 镜像......"
-# echo docker rmi gds/$PROCUCT_NAME:$PROCUCT_VERSION
-# sudo docker rmi gds/$PROCUCT_NAME:$PROCUCT_VERSION > /dev/null
+# echo docker rmi $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION
+# sudo docker rmi $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION > /dev/null
 # "-------------------------------------------------------------------------------------------"
 echo "检查容器是否存在，若存在，就先删除"
 DOCKER_CONTAINER_NAME=$IS_HOST_NAME
@@ -88,8 +88,8 @@ fi
 echo "开始构建新的IS的docker镜像......"
 echo "-------------------------------------------------------------------------------------------"
 cd $PWD/docker-is/dockerfiles/ubuntu/is
-echo "docker build -t gds/$PROCUCT_NAME:$PROCUCT_VERSION ."
-sudo docker build -t gds/$PROCUCT_NAME:$PROCUCT_VERSION .
+echo "docker build -t $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION ."
+sudo docker build -t $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION .
 cd $CUR_DIR
 #生成能够在单独部署的wso2is版本到$PWD/target/目录下
 echo "开始构建可单独部署的wso2is版本......"
@@ -102,9 +102,9 @@ fi
 zip -r $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.zip $IS_HOME    > /dev/null
 # "-------------------------------------------------------------------------------------------"
 #导出镜像文件以便迁移到其它docker环境中
-sudo docker save -o $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.tar gds/$PROCUCT_NAME:$PROCUCT_VERSION
+sudo docker save -o $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.tar$CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION
 echo "重新创建容器$DOCKER_CONTAINER_NAME"
-sudo docker run -d --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  gds/$PROCUCT_NAME:$PROCUCT_VERSION
+sudo docker run -d --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION
 echo "                 ################################################################"
 echo
 echo "                 访问IS的管理控制台：https://$IS_HOST_NAME:$IS_HOST_PORT/carbon"
@@ -117,8 +117,8 @@ echo "提示  1："
 echo "IS的本地镜像版本已生成 TAG为：$PROCUCT_NAME:$PROCUCT_VERSION"
 echo "你可以复制$PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.tar文件到光盘以便迁移到其它docker环境中"
 echo "你也可以直接在本机执行如下的docker命令来启动IS："
-echo "     docker run -it -p $IS_HOST_PORT:9443 gds/$PROCUCT_NAME:$PROCUCT_VERSION"
-echo "     docker run -d -p $IS_HOST_PORT:9443 --name $IS_HOST_NAME --restart=always gds/$PROCUCT_NAME:$PROCUCT_VERSION"
+echo "     docker run -it -p $IS_HOST_PORT:9443 $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION"
+echo "     docker run -d -p $IS_HOST_PORT:9443 --name $IS_HOST_NAME --restart=always $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION"
 echo "提示  2："
 echo "已生成能够在单独部署的wso2is版本到$PWD/target/目录下的$PROCUCT_NAME-$PROCUCT_VERSION.zip文件中"
 echo "你可以直接复制该文件来独立安装已按产品化要求配置好的IS运行版"
