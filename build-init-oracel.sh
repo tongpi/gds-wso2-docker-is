@@ -23,9 +23,9 @@
 export JAVA_HOME=/opt/java/jdk1.8.0_144
 PROCUCT_NAME=wso2is
 PROCUCT_VERSION=5.7.0
-IS_HOST_NAME=is.cd.mtn
-IS_HOST_PORT=9443
-IS_SERVER_DISPLAY_NAME=统一身份服务器
+IS_HOST_NAME=is.od.mtn
+IS_HOST_PORT=9543
+IS_SERVER_DISPLAY_NAME=统一身份服务器(Oracle)
 DB_HOST=192.168.3.49
 DB_PORT=1521
 DB_SID=kyy
@@ -124,7 +124,7 @@ zip -r $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION-oracle.zip $IS_HOME    > /dev/
 #导出镜像文件以便迁移到其它docker环境中
 sudo docker save -o $PWD/target/$PROCUCT_NAME-o$PROCUCT_VERSION.tar gds/$PROCUCT_NAME:o$PROCUCT_VERSION
 echo "重新创建容器$DOCKER_CONTAINER_NAME"
-sudo docker run -d --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  gds/$PROCUCT_NAME:$PROCUCT_VERSION
+sudo docker run -d --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  gds/$PROCUCT_NAME:o$PROCUCT_VERSION
 echo "                 ################################################################"
 echo
 echo "                 访问IS的管理控制台：https://$IS_HOST_NAME:$IS_HOST_PORT/carbon"
