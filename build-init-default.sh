@@ -24,11 +24,22 @@
 export JAVA_HOME=/opt/java/jdk1.8.0_144
 PROCUCT_NAME=wso2is
 PROCUCT_VERSION=5.7.0
-IS_HOST_NAME=is.cd.mtn
-IS_HOST_PORT=9443
-IS_SERVER_DISPLAY_NAME=统一身份服务器
-CARBON_UI_CUSTOM_IS_BRANCH=master
+IS_HOST_NAME=${IS_HOST_NAME:-is.cd.mtn}
+IS_HOST_PORT=${IS_HOST_PORT:-9443}
+IS_SERVER_DISPLAY_NAME=${IS_SERVER_DISPLAY_NAME:-统一身份服务器}  
+CARBON_UI_CUSTOM_IS_BRANCH=${CARBON_UI_CUSTOM_IS_BRANCH:-master}
 PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND="wget -N --http-user=admin --http-password=a1b2c3d4 --auth-no-challenge http://192.168.3.69:9080/job/product-is/lastSuccessfulBuild/artifact/modules/distribution/target/wso2is-5.7.0.zip"
+#-------------------------------------------------------------------------------------------
+echo "===================环境变量==================================="
+echo JAVA_HOME=$JAVA_HOME
+echo PROCUCT_NAME=$PROCUCT_NAME
+echo PROCUCT_VERSION=$PROCUCT_VERSION
+echo IS_HOST_NAME=$IS_HOST_NAME
+echo IS_HOST_PORT=$IS_HOST_PORT
+echo IS_SERVER_DISPLAY_NAME=$IS_SERVER_DISPLAY_NAME  
+echo CARBON_UI_CUSTOM_IS_BRANCH=$CARBON_UI_CUSTOM_IS_BRANCH
+echo "注意：执行脚本之前可以提前设置好以上环境变量"
+echo "============================================================"
 #-------------------------------------------------------------------------------------------
 CUR_DIR=$PWD
 if [ ! -d "$PWD/docker-is" ]; then

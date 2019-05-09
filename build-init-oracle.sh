@@ -31,16 +31,32 @@
 export JAVA_HOME=/opt/java/jdk1.8.0_144
 PROCUCT_NAME=wso2is
 PROCUCT_VERSION=5.7.0
-IS_HOST_NAME=is.od.mtn
-IS_HOST_PORT=9543
-IS_SERVER_DISPLAY_NAME="统一身份服务器(Oracle)"
-DB_HOST=192.168.3.49
-DB_PORT=1521
-DB_SID=kyy
-DB_USERNAME=wch_is
-DB_PASSWORD=a1b2c3
-CARBON_UI_CUSTOM_IS_BRANCH=master
+IS_HOST_NAME=${IS_HOST_NAME:-is.od.mtn}
+IS_HOST_PORT=${IS_HOST_PORT:-9543}
+IS_SERVER_DISPLAY_NAME=${IS_SERVER_DISPLAY_NAME:-"统一身份服务器(Oracle)")
+DB_HOST=${DB_HOST:-192.168.3.49}
+DB_PORT=${DB_PORT:-1521}
+DB_SID=${DB_SID:-kyy}
+DB_USERNAME=${DB_USERNAME:-wch_is}
+DB_PASSWORD=${DB_PASSWORD:-a1b2c3}
+CARBON_UI_CUSTOM_IS_BRANCH=${CARBON_UI_CUSTOM_IS_BRANCH:-master}
 PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND="wget -N --http-user=admin --http-password=a1b2c3d4 --auth-no-challenge http://192.168.3.69:9080/job/product-is/lastSuccessfulBuild/artifact/modules/distribution/target/wso2is-5.7.0.zip"
+#-------------------------------------------------------------------------------------------
+echo "===================环境变量==================================="
+echo JAVA_HOME=$JAVA_HOME
+echo PROCUCT_NAME=$PROCUCT_NAME
+echo PROCUCT_VERSION=$PROCUCT_VERSION
+echo IS_HOST_NAME=$IS_HOST_NAME
+echo IS_HOST_PORT=$IS_HOST_PORT
+echo IS_SERVER_DISPLAY_NAME=$IS_SERVER_DISPLAY_NAME  
+echo CARBON_UI_CUSTOM_IS_BRANCH=$CARBON_UI_CUSTOM_IS_BRANCH
+echo DB_HOST=$DB_HOST
+echo DB_PORT=$DB_PORT
+echo DB_SID=$DB_SID
+echo DB_USERNAME=$DB_USERNAME
+echo DB_PASSWORD=******
+echo "注意：执行脚本之前可以提前设置好以上环境变量"
+echo "============================================================"
 #-------------------------------------------------------------------------------------------
 CUR_DIR=$PWD
 if [ ! -d "$PWD/docker-is" ]; then
