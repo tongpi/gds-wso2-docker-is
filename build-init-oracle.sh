@@ -40,7 +40,7 @@ DB_SID=${DB_SID:-kyy}
 DB_USERNAME=${DB_USERNAME:-wch_is}
 DB_PASSWORD=${DB_PASSWORD:-a1b2c3}
 CARBON_UI_CUSTOM_IS_BRANCH=${CARBON_UI_CUSTOM_IS_BRANCH:-master}
-PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND="wget -N --http-user=admin --http-password=a1b2c3d4 --auth-no-challenge http://192.168.3.69:9080/job/product-is/lastSuccessfulBuild/artifact/modules/distribution/target/wso2is-5.7.0.zip"
+PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND="wget -N -q --http-user=admin --http-password=a1b2c3d4 --auth-no-challenge http://192.168.3.69:9080/job/product-is/lastSuccessfulBuild/artifact/modules/distribution/target/wso2is-5.7.0.zip"
 #-------------------------------------------------------------------------------------------
 echo "===================环境变量==================================="
 echo JAVA_HOME=$JAVA_HOME
@@ -67,7 +67,7 @@ echo "IS_HOME=$IS_HOME"
 PROCUCT_RELEASE_ZIP_FILE=$PROCUCT_NAME-$PROCUCT_VERSION.zip
 rm $PROCUCT_RELEASE_ZIP_FILE
 echo "开始从产品仓库下载$PROCUCT_RELEASE_ZIP_FILE到本地磁盘……"
-$PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND   > /dev/null
+$PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND
 if [ ! -f "$PROCUCT_RELEASE_ZIP_FILE" ]; then 
 #  wget  $PROCUCT_RELEASE_ZIP_FILE 
    echo "========================================================================================================================="
