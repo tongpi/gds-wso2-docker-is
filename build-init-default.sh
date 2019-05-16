@@ -124,7 +124,7 @@ zip -r $CUR_DIR/target/$PROCUCT_NAME-$PROCUCT_VERSION.zip ./$PROCUCT_NAME-$PROCU
 cd $CUR_DIR
 # "-------------------------------------------------------------------------------------------"
 #导出镜像文件以便迁移到其它docker环境中
-echo "导出is单独部署的镜像包到$CUR_DIR/target/目录下"
+echo "导出is单独部署的镜像包到$PWD/target/目录下"
 sudo docker save -o $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.tar $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION
 echo "重新创建容器$DOCKER_CONTAINER_NAME"
 sudo docker run -d --hostname $IS_HOST_NAME --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION
