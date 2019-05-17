@@ -20,7 +20,7 @@
 #
 #    以下用来修改<PRODUCT_HOME>/repository/conf/datasources下的数据源配置文件master-datasources.xml等
 #
-#    DB_HOST                               IS身份管理服务器的主数据库Oracle的主机地址，如：192.168.3.49  
+#    DB_HOST                               IS身份管理服务器的主数据库Oracle的主机地址，如：192.168.3.49
 #    DB_PORT                               IS身份管理服务器的主数据库Oracle的端口，如：1521
 #    DB_SID                                IS身份管理服务器的主数据库Oracle的SID，如：kyy
 #    DB_USERNAME                           IS身份管理服务器的主数据库Oracle的用户名
@@ -48,7 +48,7 @@ echo PROCUCT_NAME=$PROCUCT_NAME
 echo PROCUCT_VERSION=$PROCUCT_VERSION
 echo IS_HOST_NAME=$IS_HOST_NAME
 echo IS_HOST_PORT=$IS_HOST_PORT
-echo IS_SERVER_DISPLAY_NAME=$IS_SERVER_DISPLAY_NAME  
+echo IS_SERVER_DISPLAY_NAME=$IS_SERVER_DISPLAY_NAME
 echo CARBON_UI_CUSTOM_IS_BRANCH=$CARBON_UI_CUSTOM_IS_BRANCH
 echo DB_HOST=$DB_HOST
 echo DB_PORT=$DB_PORT
@@ -68,20 +68,20 @@ PROCUCT_RELEASE_ZIP_FILE=$PROCUCT_NAME-$PROCUCT_VERSION.zip
 rm $PROCUCT_RELEASE_ZIP_FILE
 echo "开始从产品仓库下载$PROCUCT_RELEASE_ZIP_FILE到本地磁盘……"
 $PROCUCT_RELEASE_ZIP_FILE_DOWNLOAD_COMMAND
-if [ ! -f "$PROCUCT_RELEASE_ZIP_FILE" ]; then 
-#  wget  $PROCUCT_RELEASE_ZIP_FILE 
+if [ ! -f "$PROCUCT_RELEASE_ZIP_FILE" ]; then
+#  wget  $PROCUCT_RELEASE_ZIP_FILE
    echo "========================================================================================================================="
    echo "用法："
    echo "请首先复制从IS源代码库( https://github.com/tongpi/product-is.git)构建出来的$PROCUCT_NAME-$PROCUCT_VERSION.zip到$0脚本所在目录下"
-   echo "========================================================================================================================="  
+   echo "========================================================================================================================="
    exit 1
-fi 
+fi
 rm -Rf $IS_HOME
 # 自动安装zip包
-if type unzip >/dev/null 2>&1; then 
+if type unzip >/dev/null 2>&1; then
   echo "zip软件包已经安装"
-else 
-  echo "正在安装zip软件包……" 
+else
+  echo "正在安装zip软件包……"
   sudo apt-get install zip --assume-yes  > /dev/null
 fi
 #-------------------------------------------------------------------------------------------
@@ -93,8 +93,9 @@ cp ./jdbc-drivers/*.jar $PWD/docker-is/dockerfiles/ubuntu/is/files/
 cp ./jdbc-drivers/*.jar $IS_HOME/repository/components/lib/
 echo "已复制数据库jdbc驱动到$PWD/docker-is/dockerfiles/ubuntu/is/files目录下"
 
-# 给IS部署cas构件  添加org.wso2.carbon.identity.sso.cas-2.0.X.jar文件到$IS_HOME//repository/components/dropins目录下即可
-cp ./connectors/org.wso2.carbon.extension.identity.sso.cas-2.0.2.jar $IS_HOME//repository/components/dropins/
+# 给IS部署cas构件  添加org.wso2.carbon.identity.sso.cas-2.0.X.jar文件到$IS_HOME/repository/components/dropins目录下即可
+cp ./connectors/org.wso2.carbon.extension.identity.sso.cas-2.0.2.jar $IS_HOME/repository/components/dropins/
+echo "已复制org.wso2.carbon.extension.identity.sso.cas-2.0.2.jar到$IS_HOME/repository/components/dropins/目录下"
 # "-------------------------------------------------------------------------------------------"
 echo "开始进行IS管理控制台个性化定制组件的安装工作"
 if [ ! -d "$PWD/carbon-ui-custom-is" ]; then
