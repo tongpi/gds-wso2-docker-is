@@ -131,7 +131,7 @@ cd $CUR_DIR
 echo "导出is单独部署的镜像包到$PWD/target/目录下"
 sudo docker save -o $PWD/target/$PROCUCT_NAME-$PROCUCT_VERSION.tar $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION
 echo "重新创建容器$DOCKER_CONTAINER_NAME"
-sudo docker run -d --hostname $IS_HOST_NAME --name $DOCKER_CONTAINER_NAME --restart=always -p $IS_HOST_PORT:9443  $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION
+sudo docker run -d --hostname $IS_HOST_NAME --name $DOCKER_CONTAINER_NAME --restart=always -p 4000:4000 -p $IS_HOST_PORT:9443  $CARBON_UI_CUSTOM_IS_BRANCH/$PROCUCT_NAME:$PROCUCT_VERSION
 #处理dashboad不能访问的问题，原因是dashboard的安全机制不能解析$IS_HOST_NAME
 #sleep 60s
 #sudo docker exec -u 0 $DOCKER_CONTAINER_NAME -bin/bash -c "echo 127.0.0.1 $IS_HOST_NAME >> /etc/hosts"
