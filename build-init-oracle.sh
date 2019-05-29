@@ -108,6 +108,14 @@ cd carbon-ui-custom-is
 mvn clean install    > /dev/null
 cp modules/org.wso2.carbon.ui_fragment/target/org.wso2.carbon.ui_4.4.35_fragment-1.0.0.jar ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/components/dropins/
 cp modules/org.wso2.carbon.ui_patch/target/org.wso2.carbon.ui_4.4.35_patch-1.0.0.jar ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/components/dropins/
+
+#添加定制cas登录页的样式
+UI_CUR_DIR=$PWD
+cd ../docker-is/dockerfiles/ubuntu/is/files/$PROCUCT_NAME-$PROCUCT_VERSION/repository/deployment/server/webapps
+unzip -oq authenticationendpoint.war -d authenticationendpoint && rm -rf authenticationendpoint.war
+cp -r $UI_CUR_DIR/assets/customCasStyle/* authenticationendpoint
+cd authenticationendpoint && zip -r ../authenticationendpoint.war . && cd .. &&  rm -rf authenticationendpoint
+
 cd $CUR_DIR
 # "-------------------------------------------------------------------------------------------"
 # 自动配置服务器相关证书以及文件编码转换等工作
